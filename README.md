@@ -13,8 +13,8 @@ Completed
 </summary>
 
  <ul>
-  <li>None so far</li>
-     
+  <li>Setup common project files</li>
+  <li>Started repo architecture</li>
 </ul> 
 </details>
 <details>
@@ -23,7 +23,7 @@ Near term
 </summary>
 
  <ul>
-  <li>Setup common project files</li>
+
   <li>Setup repo architecture</li>
   <li>Create common trainer/evaluator objects</li>
   <li>Add common visualization code</li>
