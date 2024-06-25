@@ -158,3 +158,8 @@ data_maps = ["mapbox"]
 # which executes the function `main` from this package when invoked.
 [project.scripts]
 ml_framework = "ml_framework:main"
+
+
+[tool.poetry]
+repository = "https://github.com/ajperry2/ml_framework"
+readme = "README.md"
