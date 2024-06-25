@@ -163,7 +163,7 @@ ml_framework = "ml_framework:main"
 [tool.poetry]
 repository = "https://github.com/ajperry2/ml_framework"
 readme = "README.md"
-authors: ["Alan Perry"]
+authors = ["Alan Perry"]
 description = "repeated ml code"
 name = "ml_framework"
 version = "1.0.0"
