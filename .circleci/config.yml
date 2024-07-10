@@ -11,9 +11,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-
-orbs:
-  python: circleci/python@2
 jobs:
   test-python:
     # Install dependencies and run tests
