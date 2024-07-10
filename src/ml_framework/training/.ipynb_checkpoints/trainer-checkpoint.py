@@ -1,13 +1,12 @@
 """A class which performs utilities related to training."""
 from torch.nn import Module
-from torch.optim import Optimizer, LRScheduler
-from torch.utils.data import Dataloader
+from torch.optim import Optimizer, lr_scheduler
+from torch.utils.data import DataLoader
 from torch.nn.modules.loss import _Loss as Loss
 from typing import Callable, Tuple, List
 from torch import Tensor
 import numpy as np
 from random import randint
-
 
 class Trainer:
     """A class which will train a model as you specify."""
@@ -15,15 +14,17 @@ class Trainer:
     def train(
         self,
         model: Module,
-        train_dataloader: Dataloader,
-        test_dataloader: Dataloader,
+        train_dataloader: DataLoader,
+        test_dataloader: DataLoader,
         optimizer: Optimizer,
         loss_function: Loss,
         epochs: int,
         steps_per_test: int,
-        learning_rate_scheduler: LRScheduler,
-        train_callback: Callable,
-        test_callback: Callable
+        learning_rate_scheduler: lr_scheduler,
+        train_callback: Callable = lambda loss: None,
+        test_callback: Callable = lambda loss, samples: None,
+        visualize: bool = False,
+        num_samples: int = 2
     ):
         """Train a model.
 
@@ -51,8 +52,13 @@ class Trainer:
                 How often should we perform logging?
             logging_callback (Callable):
                 What should we do for logging?
+            visualize (bool):
+                Should we plot samples?
+            num_samples (int):
+                Number of samples to visualize
         """
         iterations = 0
+        average_train_loss = 0.0
         model.train()
 
         for epoch in range(epochs):
@@ -61,18 +67,24 @@ class Trainer:
                 model.zero_grad()
                 output = model(input_batch)
                 loss = loss_function(output, target_batch)
+                average_train_loss += loss.item() / input_batch.shape[0]
                 loss.backward()
                 optimizer.step()
                 learning_rate_scheduler.step(epoch + i/len(train_dataloader))
                 iterations += 1
                 if iterations % steps_per_test == 0:
                     # Test
-                    average_loss, samples = self._test(model, test_dataloader)
-                    logging_callback(average_loss, samples)
+                    train_callback(average_train_loss)
+                    average_loss, samples = self._test(
+                        model, test_dataloader, loss_function, num_samples
+                    )
+                    test_callback(average_loss, samples)
+        model.eval()
 
     def _test(
+        self,
         model: Module,
-        test_dataloader: Dataloader,
+        test_dataloader: DataLoader,
         loss_function: Loss,
         num_examples: int
     ) -> Tuple[float, List[Tuple[Tensor, Tensor, Tensor]]]:
@@ -92,14 +104,14 @@ class Trainer:
         sample_steps = np.round(
             np.linspace(0, len(test_dataloader) - 1, num_examples)
         ).astype(int)
-        sample_steps = set(sample_steps.numpy().tolist())
+        sample_steps = set(sample_steps.tolist())
         samples = []
         for i, (input_batch, target_batch) in enumerate(test_dataloader):
             output = model(input_batch)
             loss = loss_function(output, target_batch)
             total_loss += loss.item()
             if i in sample_steps:
-                rand_sample_i = randint(0, len(input_batch))
+                rand_sample_i = randint(0, len(input_batch)-1)
                 samples.append((
                     input_batch[rand_sample_i],
                     output[rand_sample_i],
