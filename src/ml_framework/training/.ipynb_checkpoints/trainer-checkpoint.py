@@ -8,6 +8,7 @@ from torch import Tensor
 import numpy as np
 from random import randint
 
+
 class Trainer:
     """A class which will train a model as you specify."""
 

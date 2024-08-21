@@ -134,6 +134,10 @@ dependencies = [
 # Optional dependencies the project provides. These are commonly 
 # referred to as "extras". For a more extensive definition see:
 # https://packaging.python.org/en/latest/specifications/dependency-specifiers/#extras
+
+
+
+
 [project.optional-dependencies]
 dev = ["black", "isort", "jupyterlab-code-formatter==2.0.0"]
 visualization = ["matplotlib"]
@@ -164,6 +168,6 @@ ml_framework = "ml_framework:main"
 repository = "https://github.com/ajperry2/ml_framework"
 readme = "README.md"
 authors = ["Alan Perry"]
-description = "repeated ml code"
+description = "repeated ml code with minimal and modular dependencies"
 name = "ml_framework"
 version = "1.0.0"

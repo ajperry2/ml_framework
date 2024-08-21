@@ -12,4 +12,5 @@ dependencies:
   - pytorch
   - torchvision
   - matplotlib
-prefix: /home/alan/miniconda3/envs/ml_framework
+  - pytest
+  - jsonschema
